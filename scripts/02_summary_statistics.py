@@ -1,12 +1,16 @@
 import pandas as pd
 
-# Load dataset
-df = pd.read_csv("data/final-post-college-salaries.csv")
+# Load cleaned dataset
+df = pd.read_csv("data/cleaned_salaries.csv")
 
-# Convert salary columns to numeric values
-df["Early Career Pay"] = df["Early Career Pay"].replace("[$,]", "", regex=True).astype(float)
-df["Mid-Career Pay"] = df["Mid-Career Pay"].replace("[$,]", "", regex=True).astype(float)
-df["% High Meaning"] = df["% High Meaning"].replace("[%]", "", regex=True).astype(float)
+# Compute basic statistics
+summary = df.describe()
 
-# Save cleaned data
-df.to_csv("data/cleaned_salaries.csv", index=False)
+# Identify highest and lowest-paying majors
+highest_paying = df.nlargest(5, "Mid-Career Pay")
+lowest_paying = df.nsmallest(5, "Mid-Career Pay")
+
+# Save results
+summary.to_csv("outputs/summary_statistics.csv")
+highest_paying.to_csv("outputs/highest_paying_majors.csv", index=False)
+lowest_paying.to_csv("outputs/lowest_paying_majors.csv", index=False)
